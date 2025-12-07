@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Barzakh : DEENVERTISSEMENT Gaming</title>
+    <title>Barzakh : Mobile Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Amiri:wght@400;700&family=Roboto+Mono:wght@500&display=swap');
 
@@ -22,11 +22,14 @@
             font-family: 'Amiri', serif;
             overflow: hidden;
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; user-select: none; cursor: crosshair; touch-action: none;
+            height: 100vh; width: 100vw;
+            user-select: none; 
+            touch-action: none; /* Bloque le scroll et le zoom sur mobile */
+            -webkit-tap-highlight-color: transparent; /* Enlève le flash gris au clic */
         }
 
         #game-container {
-            position: relative; width: 100vw; height: 100vh;
+            position: relative; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #141414 0%, #000000 90%);
         }
 
@@ -38,39 +41,27 @@
             background: #000; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none;
         }
-        
         .play-anim { animation: sequenceIntro 5s forwards; pointer-events: auto !important; opacity: 1 !important; }
 
         .logo-deen {
-            font-family: 'Cinzel', serif; font-weight: 900; font-size: 8vw;
+            font-family: 'Cinzel', serif; font-weight: 900; font-size: 10vw; /* Responsive font */
             background: linear-gradient(to bottom, #cfc09f 22%, #634f2c 24%, #cfc09f 26%, #cfc09f 27%, #ffecb3 40%, #3a2c0f 78%); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
-            opacity: 0; transform: scale(0.8);
+            text-shadow: 0 0 50px rgba(212, 175, 55, 0.3); opacity: 0; transform: scale(0.8); text-align: center;
         }
         
         .logo-gaming {
-            font-family: 'Cinzel', serif; font-weight: 400; font-size: 3vw; letter-spacing: 1.5vw;
-            color: #fff; margin-top: 10px;
-            opacity: 0; transform: translateY(20px);
-            text-shadow: 0 0 10px #4fc3f7;
+            font-family: 'Cinzel', serif; font-weight: 400; font-size: 4vw; letter-spacing: 1.5vw;
+            color: #fff; margin-top: 10px; opacity: 0; transform: translateY(20px); text-shadow: 0 0 10px #4fc3f7; text-align: center;
         }
 
-        /* Animation Sequence */
         @keyframes sequenceIntro {
-            0% { opacity: 1; }
-            10% { opacity: 1; }
-            /* Deenvertissement arrive */
-            15% { opacity: 1; } 
-            
-            /* Fin */
+            0%, 10%, 15% { opacity: 1; }
             90% { opacity: 1; }
             100% { opacity: 0; visibility: hidden; }
         }
-
         .anim-text-1 { animation: textReveal 4s forwards 0.5s; }
         .anim-text-2 { animation: subReveal 4s forwards 1.5s; }
-
         @keyframes textReveal {
             0% { opacity: 0; transform: scale(0.8); filter: blur(10px); }
             20% { opacity: 1; transform: scale(1); filter: blur(0px); }
@@ -84,7 +75,7 @@
             100% { opacity: 0; }
         }
 
-        /* --- OVERLAYS JEU --- */
+        /* --- OVERLAYS --- */
         #damage-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, transparent 40%, rgba(180, 0, 0, 0.8) 100%); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 5; }
         #victory-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 40; }
         .burst-light { animation: lightBurst 6s forwards ease-in-out; }
@@ -93,7 +84,6 @@
         .fire-halo { animation: firePulse 2s infinite alternate ease-in-out; opacity: 0.8 !important; }
         @keyframes firePulse { 0% { filter: brightness(1); } 100% { filter: brightness(1.3) hue-rotate(-10deg); } }
 
-        /* ISTIGHFAR */
         #istighfar-overlay {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-family: 'Cinzel', serif; font-size: 8vw; font-weight: bold; color: #fff;
@@ -104,25 +94,26 @@
         @keyframes istighfarBoom {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); letter-spacing: 50px; }
             10% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); letter-spacing: 10px; }
-            20% { transform: translate(-50%, -50%) scale(1); }
             80% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); letter-spacing: 20px; }
         }
 
         /* UI */
         .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; z-index: 30; }
-        .hud-top { text-align: center; padding-top: 20px; font-family: 'Cinzel', serif; text-shadow: 0 0 10px #000; }
+        .hud-top { text-align: center; padding-top: 5vh; font-family: 'Cinzel', serif; text-shadow: 0 0 10px #000; }
         #dragon-counter { font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px var(--danger); transition: color 0.3s; }
         .counter-danger { color: #ff4500 !important; animation: pulseText 0.5s infinite; }
-        .hud-bottom { padding-bottom: 30px; display: flex; flex-direction: column; align-items: center; }
-        .ulti-bar-container { width: 300px; height: 12px; background: #222; border: 2px solid #555; border-radius: 6px; overflow: hidden; margin-top: 10px; box-shadow: 0 0 10px #000; }
+        .hud-bottom { padding-bottom: 5vh; display: flex; flex-direction: column; align-items: center; }
+        .ulti-bar-container { width: 80%; max-width: 300px; height: 12px; background: #222; border: 2px solid #555; border-radius: 6px; overflow: hidden; margin-top: 10px; box-shadow: 0 0 10px #000; }
         .ulti-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #fff, #4fc3f7, #fff); box-shadow: 0 0 20px #4fc3f7; transition: width 0.1s linear; }
         .ulti-text { font-family: 'Cinzel', serif; font-size: 1rem; color: #4fc3f7; opacity: 0.8; letter-spacing: 2px; text-shadow: 0 0 5px #000; }
         .ulti-ready { color: #fff; font-weight: bold; text-shadow: 0 0 15px #4fc3f7, 0 0 30px #fff; animation: pulseText 0.5s infinite alternate; }
         @keyframes pulseText { from { transform: scale(1); } to { transform: scale(1.08); } }
+        
         .memory-flash {
             position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 2.2rem; font-style: italic; color: #fff; text-shadow: 0 0 20px var(--gold), 0 0 40px var(--gold);
+            font-size: 5vw; /* Responsive font */
+            font-style: italic; color: #fff; text-shadow: 0 0 20px var(--gold), 0 0 40px var(--gold);
             pointer-events: none; opacity: 0; transition: opacity 0.3s, transform 1s ease-out; white-space: nowrap; z-index: 25;
         }
         #gamepad-status { font-size: 0.8rem; color: #444; margin-top: 5px; font-weight: bold; display: flex; align-items: center; gap: 5px; justify-content: center; }
@@ -138,38 +129,29 @@
         .hidden { display: none !important; opacity: 0; }
         .visible { opacity: 1; }
 
-        h1 { font-family: 'Cinzel', serif; font-size: 3rem; color: var(--gold); margin-bottom: 15px; text-shadow: 0 0 20px var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .sacred-text { font-size: 1.2rem; color: #ddd; max-width: 800px; line-height: 1.8; margin-bottom: 20px; }
+        h1 { font-family: 'Cinzel', serif; font-size: 8vw; /* Responsive */ color: var(--gold); margin-bottom: 15px; text-shadow: 0 0 20px var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .sacred-text { font-size: 1.2rem; color: #ddd; max-width: 800px; line-height: 1.6; margin-bottom: 20px; }
         .source-ref { display: block; margin-top: 15px; font-size: 0.9rem; color: #888; font-style: italic; }
         
         .btn-start {
-            padding: 15px 50px; background: rgba(0,0,0,0.5); border: 2px solid var(--gold);
-            color: var(--gold); font-family: 'Cinzel', serif; font-size: 1.3rem;
+            padding: 15px 40px; background: rgba(0,0,0,0.5); border: 2px solid var(--gold);
+            color: var(--gold); font-family: 'Cinzel', serif; font-size: 1.5rem;
             cursor: pointer; transition: 0.3s; z-index: 60; margin-top: 20px;
+            /* Pour mobile : zone de touche plus grande */
+            min-width: 200px; min-height: 60px;
         }
-        .btn-start:hover { background: var(--gold); color: #000; box-shadow: 0 0 40px var(--gold); }
-        .btn-gamepad-hint { font-size: 0.8rem; color: #4fc3f7; margin-top: 5px; font-style: italic; }
+        .btn-start:hover, .btn-start:active { background: var(--gold); color: #000; box-shadow: 0 0 40px var(--gold); }
+        .btn-gamepad-hint { font-size: 0.8rem; color: #4fc3f7; margin-top: 10px; font-style: italic; }
 
         /* CONTROLS UI */
-        .controls-container { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
-        .control-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; width: 280px; }
-        .control-title { color: var(--blue-light); font-family: 'Cinzel'; margin-bottom: 15px; font-size: 1.1rem; }
-        .key-group { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .key-row { display: flex; gap: 5px; }
-        .key { width: 40px; height: 40px; border: 2px solid #666; border-radius: 5px; display: flex; justify-content: center; align-items: center; font-family: 'Roboto Mono', monospace; font-size: 1.2rem; color: #aaa; box-shadow: 0 4px 0 #333; }
-        .key-space { width: 140px; font-size: 0.8rem; }
-        .key-active { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 10px var(--gold); animation: keyPulse 1.5s infinite; }
-        .gamepad-visual { width: 140px; height: 90px; border: 2px solid #555; border-radius: 20px 20px 40px 40px; position: relative; background: #111; }
-        .dpad { position: absolute; top: 25px; left: 20px; width: 40px; height: 40px; }
-        .dpad div { background: #444; position: absolute; }
-        .d-v { width: 12px; height: 40px; left: 14px; top: 0; border-radius: 2px; }
-        .d-h { width: 40px; height: 12px; left: 0; top: 14px; border-radius: 2px; }
-        .dpad.active .d-v, .dpad.active .d-h { background: var(--gold); box-shadow: 0 0 10px var(--gold); animation: keyPulse 1.5s infinite; }
-        .btn-group { position: absolute; top: 25px; right: 20px; width: 40px; height: 40px; }
-        .g-btn { width: 12px; height: 12px; border-radius: 50%; background: #444; position: absolute; }
-        .btn-a { bottom: 0; left: 14px; background: #444; }
-        .btn-a.active { background: var(--blue-light); box-shadow: 0 0 10px var(--blue-light); animation: keyPulse 1.5s infinite; }
-        @keyframes keyPulse { 0% { opacity: 0.5; } 100% { opacity: 1; transform: scale(1.05); } }
+        .controls-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
+        .control-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; width: 140px; min-width: 40%; }
+        .control-title { color: var(--blue-light); font-family: 'Cinzel'; margin-bottom: 10px; font-size: 1rem; }
+        
+        /* Mobile Touch Icons */
+        .touch-icon { width: 50px; height: 50px; border: 2px solid #666; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; position: relative;}
+        .touch-tap { width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 50%; animation: tapAnim 1s infinite; }
+        @keyframes tapAnim { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
 
     </style>
 </head>
@@ -188,8 +170,8 @@
 
         <div id="screen-prelaunch" class="screen visible" style="z-index: 200; background: #000;">
             <div style="font-family:'Cinzel'; color:#666; font-size:0.9rem; margin-bottom:20px;">INITIALISATION SYSTÈME...</div>
-            <button class="btn-start" onclick="playIntro()">LANCER LE JEU</button>
-            <div class="btn-gamepad-hint">Appuyez sur A ou START</div>
+            <button class="btn-start" onclick="playIntro()">LANCER</button>
+            <div class="btn-gamepad-hint">Toucher pour commencer</div>
         </div>
 
         <canvas id="gameCanvas"></canvas>
@@ -202,87 +184,67 @@
             <div class="hud-top">
                 <span style="font-size: 1rem; color: #aaa; font-family: Cinzel;">DRAGONS</span><br>
                 <div id="dragon-counter">0 / 99</div>
-                <div id="gamepad-status"><span class="gp-icon"></span> MANETTE DÉTECTÉE</div>
+                <div id="gamepad-status"><span class="gp-icon"></span> MANETTE OK</div>
             </div>
             <div id="memory-text" class="memory-flash"></div>
             <div class="hud-bottom">
-                <div id="ulti-text" class="ulti-text">Larme de Regret (Istighfar)</div>
+                <div id="ulti-text" class="ulti-text">Larme de Regret</div>
                 <div class="ulti-bar-container"><div id="ulti-bar" class="ulti-bar-fill"></div></div>
-                <div style="font-size: 0.9rem; color: #aaa; margin-top: 8px; font-family: Cinzel;">ESPACE / BOUTON A</div>
+                <div style="font-size: 0.8rem; color: #aaa; margin-top: 8px; font-family: Cinzel;">CLIC CENTRE / BOUTON A</div>
             </div>
         </div>
 
         <div id="screen-intro-1" class="screen hidden">
-            <h1>L'AVERTISSEMENT</h1>
-            <div class="sacred-text">
-                "On préposera au mécréant dans sa tombe <span style="color:var(--danger)">quatre-vingt-dix-neuf dragons</span> (Tinnin) ; ils le mordront et le grifferont jusqu'au Jour de la Résurrection.<br>
-                Si l'un d'eux soufflait sur la terre, aucune verdure n'y pousserait plus."
-                <span class="source-ref">Rapporté par Ahmad (3/38) et At-Tirmidhi (2460).</span>
+            <h1 style="font-size: 2.5rem;">L'AVERTISSEMENT</h1>
+            <div class="sacred-text" style="font-size: 1rem;">
+                "On préposera au mécréant dans sa tombe <span style="color:var(--danger)">quatre-vingt-dix-neuf dragons</span>... ils le mordront et le grifferont jusqu'au Jour de la Résurrection."
             </div>
             <button class="btn-start" onclick="nextScreen()">SUIVANT</button>
-            <div class="btn-gamepad-hint">Appuyez sur A ou START</div>
         </div>
 
         <div id="screen-intro-2" class="screen hidden">
-            <h1>LA RÈGLE DU JEU</h1>
-            <div class="sacred-text" style="text-align: left;">
-                <p>1. <strong>SURVIVRE</strong> : Vous devez repousser exactement <span style="color:var(--gold)">99 dragons</span>.</p>
-                <p>2. <strong>INVOQUEZ</strong> : Les boucliers s'affaiblissent. Activez-les pour les réparer.</p>
-                <p>3. <strong>LE REPENTIR</strong> : Chargez votre jauge pour lancer l'<strong>ISTIGHFAR</strong>.</p>
+            <h1 style="font-size: 2.5rem;">RÈGLES</h1>
+            <div class="sacred-text" style="text-align: left; font-size: 1rem;">
+                <p>1. <strong>SURVIVRE</strong> : Repoussez 99 dragons.</p>
+                <p>2. <strong>TACTILE</strong> : Tapez sur les boucliers (Haut, Bas, Gauche, Droite) pour les réparer.</p>
+                <p>3. <strong>ISTIGHFAR</strong> : Tapez au <strong>CENTRE</strong> quand la jauge est pleine.</p>
             </div>
-            <button class="btn-start" onclick="nextScreen()">LES CONTRÔLES</button>
-            <div class="btn-gamepad-hint">Appuyez sur A ou START</div>
+            <button class="btn-start" onclick="nextScreen()">SUIVANT</button>
         </div>
 
         <div id="screen-intro-3" class="screen hidden">
-            <h1>CONTRÔLES</h1>
+            <h1 style="font-size: 2.5rem;">CONTRÔLES</h1>
             <div class="controls-container">
                 <div class="control-box">
-                    <div class="control-title">CLAVIER</div>
-                    <div class="key-group">
-                        <div class="key key-active" style="margin-bottom:5px;">↑</div>
-                        <div class="key-row"><div class="key key-active">←</div><div class="key key-active">↓</div><div class="key key-active">→</div></div>
-                    </div>
-                    <div style="margin-top:15px; font-size:0.8rem; color:#888;">Flèches ou ZQSD</div>
-                    <div class="key key-space key-active" style="margin-top:10px;">ESPACE</div>
+                    <div class="control-title">TACTILE</div>
+                    <div class="touch-icon"><div class="touch-tap"></div></div>
+                    <div style="font-size:0.8rem; color:#888;">Tapez sur les côtés</div>
                 </div>
                 <div class="control-box">
                     <div class="control-title">MANETTE</div>
-                    <div class="gamepad-visual">
-                        <div class="dpad active"><div class="d-v"></div><div class="d-h"></div></div>
-                        <div class="btn-group"><div class="g-btn btn-a active"></div></div>
-                    </div>
-                    <div style="margin-top:15px; font-size:0.8rem; color:#888;">Croix / Stick</div>
-                    <div style="font-size:0.8rem; color:#4fc3f7; margin-top:5px;">Bouton A / X</div>
+                    <div style="font-size:2rem;">🎮</div>
+                    <div style="font-size:0.8rem; color:#888;">Croix + A</div>
                 </div>
             </div>
-            <button class="btn-start" onclick="startGame()">COMMENCER (0/99)</button>
-            <div class="btn-gamepad-hint">Appuyez sur A ou START</div>
+            <button class="btn-start" onclick="startGame()">COMMENCER</button>
         </div>
 
         <div id="game-over-screen" class="screen hidden">
-            <h1 style="color: #ff4500;">LE REGRET ÉTERNEL</h1>
-            <div class="sacred-text" style="color: #ffcccb;">
-                "Puis lorsque la mort vient à l'un deux, il dit :<br> 
-                'Mon Seigneur ! Fais-moi revenir (sur terre), afin que je fasse du bien dans ce que j'ai délaissé.'<br><br>
-                NON, c'est simplement une parole qu'il dit.<br>
-                Derrière eux, il y a une barrière <span style="color:#ff6b6b">(BARZAKH)</span> jusqu'au jour où ils seront ressuscités."
-                <span class="source-ref">Sourate Al-Mu'minun, 99-100</span>
+            <h1 style="color: #ff4500;">ÉCHEC</h1>
+            <div class="sacred-text" style="color: #ffcccb; font-size: 1rem;">
+                "Mon Seigneur ! Fais-moi revenir..."<br>
+                Derrière eux, il y a une barrière <span style="color:#ff6b6b">(BARZAKH)</span>.
             </div>
             <button class="btn-start" style="border-color: #ff4500; color: #ff4500;" onclick="startGame()">RECOMMENCER</button>
-            <div class="btn-gamepad-hint">Appuyez sur A ou START</div>
         </div>
 
         <div id="victory-screen" class="screen hidden" style="background: transparent;">
-            <h1 style="color: #fff; text-shadow: 0 0 50px #fff;">LA GRANDE RÉUSSITE</h1>
-            <div class="sacred-text" style="color: #fff; font-size: 1.5rem;">
-                Les anges descendent sur eux :<br>
-                "N'ayez crainte et ne soyez pas affligés ; mais annoncez la bonne nouvelle du Paradis qui vous était promis."<br><br>
-                "Entrez-y en paix et en sécurité."
-                <span class="source-ref">Coran 41:30 / 15:46</span>
+            <h1 style="color: #fff;">RÉUSSITE</h1>
+            <div class="sacred-text" style="color: #fff; font-size: 1.2rem;">
+                "N'ayez crainte et ne soyez pas affligés..."<br>
+                (Coran 41:30)
             </div>
             <button class="btn-start" style="border-color: #fff; color: #fff;" onclick="startGame()">RENAÎTRE</button>
-            <div class="btn-gamepad-hint">Appuyez sur A ou START</div>
         </div>
     </div>
 
@@ -306,44 +268,43 @@
 
         const SINS = ["Orgueil", "Mensonge", "Regard", "Colère", "Riba", "Négligence", "Rancune", "Injustice"];
         const MEMORIES = {
-            'top': ["J'ai prié quand ils dormaient", "Larmes de crainte", "Prosternation longue", "Nuit du Destin"],
-            'right': ["J'ai jeûné sous le soleil", "La soif pour Allah", "Repas partagé"],
-            'left': ["J'ai purifié mon or", "L'aumône secrète", "L'orphelin nourri", "Soutien à la veuve"],
-            'bottom': ["Sourire au frère", "Pardon difficile", "Vérité amère", "Visite au malade"]
+            'top': ["Prières nocturnes", "Larmes de crainte", "Prosternation", "Laylat al-Qadr"],
+            'right': ["Jeûne", "Soif pour Allah", "Iftar partagé"],
+            'left': ["Zakat purifiée", "Aumône secrète", "Soutien orphelin", "Aide veuve"],
+            'bottom': ["Sourire", "Pardon", "Vérité", "Visite malade"]
         };
         const SHIELDS = { top: { color: '#4fc3f7', label: 'PRIÈRE' }, right: { color: '#66bb6a', label: 'JEÛNE' }, bottom: { color: '#ab47bc', label: 'BONTÉ' }, left: { color: '#ffa726', label: 'ZAKAT' } };
 
-        let width, height, cx, cy, animationId;
+        let width, height, cx, cy, minDim, animationId;
         const TOTAL_DRAGONS = 99;
         let game = { active: false, frame: 0, spawnedCount: 0, defeatedCount: 0, enemies: [], particles: [], shields: {}, ulti: 0, shake: 0 };
         let gamepadConnected = false;
-        let currentScreen = 0; // 0:PreLaunch, 1:IntroAnim, 2:Intro1, 3:Intro2, 4:Controls, 5:Game, 6:End
+        let currentScreen = 0; 
         let lastInputTime = 0;
         let gameStartTime = 0;
 
-        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; cx = width/2; cy = height/2; }
+        // RESPONSIVE RESIZE
+        function resize() { 
+            width = canvas.width = window.innerWidth; 
+            height = canvas.height = window.innerHeight; 
+            cx = width/2; cy = height/2;
+            minDim = Math.min(width, height); // Base pour le scaling
+        }
         window.addEventListener('resize', resize);
 
-        /* GESTION INTRO ANIMATION */
+        // INTRO
         function playIntro() {
             document.getElementById('screen-prelaunch').classList.remove('visible');
             document.getElementById('screen-prelaunch').classList.add('hidden');
             currentScreen = 1;
-
             const container = document.getElementById('intro-animation-container');
             const logo1 = document.getElementById('logo-deen');
             const logo2 = document.getElementById('logo-gaming');
-
             container.classList.add('play-anim');
             logo1.classList.add('anim-text-1');
             logo2.classList.add('anim-text-2');
-
-            // Fin de l'anim après 5s
-            setTimeout(() => {
-                endIntro();
-            }, 5000);
+            setTimeout(() => { endIntro(); }, 5000);
         }
-
         function endIntro() {
             document.getElementById('intro-animation-container').style.display = 'none';
             currentScreen = 2;
@@ -351,20 +312,33 @@
             document.getElementById('screen-intro-1').classList.add('visible');
         }
 
-        /* CLASSES DU JEU */
+        // CLASSES RESPONSIVE
         class Shield {
-            constructor(k, a) { this.key = k; this.label = SHIELDS[k].label; this.color = SHIELDS[k].color; this.angle = a; this.energy = 100; this.radius = 140; this.width = Math.PI/2.2; this.pulse = 0; }
+            constructor(k, a) { this.key = k; this.label = SHIELDS[k].label; this.color = SHIELDS[k].color; this.angle = a; this.energy = 100; this.width = Math.PI/2.2; this.pulse = 0; }
             draw() {
                 if(this.energy <= 0) return;
+                // Calcul rayon responsive
+                let radius = minDim * 0.35; // 35% de la taille min
+                
                 ctx.save(); ctx.translate(cx, cy); ctx.rotate(this.angle);
                 let alpha = this.energy/100; if(this.pulse > 0) this.pulse -= 2; let glow = (this.pulse > 0) ? 30 : 15;
-                ctx.shadowBlur = glow*alpha; ctx.shadowColor = this.color; ctx.strokeStyle = this.color; ctx.lineWidth = 10; ctx.lineCap = "round"; ctx.globalAlpha = Math.max(0.15, alpha);
-                ctx.beginPath(); ctx.arc(0,0,this.radius,-this.width/2,this.width/2); ctx.stroke();
-                ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0,0,this.radius-15,-this.width/2*alpha,this.width/2*alpha); ctx.stroke(); ctx.restore();
-                let td = this.radius + 45; let tx = cx + Math.cos(this.angle)*td, ty = cy + Math.sin(this.angle)*td;
-                ctx.save(); ctx.fillStyle = this.color; ctx.globalAlpha = Math.max(0.5, alpha); ctx.font = "bold 20px Cinzel"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.shadowBlur = 10; ctx.shadowColor = "#000"; if(this.key === 'bottom') ty -= 10; ctx.fillText(this.label, tx, ty); ctx.restore();
+                ctx.shadowBlur = glow*alpha; ctx.shadowColor = this.color; ctx.strokeStyle = this.color; 
+                ctx.lineWidth = minDim * 0.02; // Epaisseur responsive
+                ctx.lineCap = "round"; ctx.globalAlpha = Math.max(0.15, alpha);
+                
+                ctx.beginPath(); ctx.arc(0,0,radius,-this.width/2,this.width/2); ctx.stroke();
+                ctx.lineWidth = minDim * 0.005; 
+                ctx.beginPath(); ctx.arc(0,0,radius-(minDim*0.04),-this.width/2*alpha,this.width/2*alpha); ctx.stroke();
+                ctx.restore();
+
+                let td = radius + (minDim * 0.1); 
+                let tx = cx + Math.cos(this.angle)*td, ty = cy + Math.sin(this.angle)*td;
+                ctx.save(); ctx.fillStyle = this.color; ctx.globalAlpha = Math.max(0.5, alpha); 
+                ctx.font = `bold ${minDim*0.05}px Cinzel`; // Font responsive
+                ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.shadowBlur = 10; ctx.shadowColor = "#000"; 
+                if(this.key === 'bottom') ty -= 10; ctx.fillText(this.label, tx, ty); ctx.restore();
             }
-            repair() { if(this.energy>0 && this.energy<100) { this.energy = Math.min(100, this.energy+30); this.pulse = 20; triggerMemory(this.key); createParticles(cx+Math.cos(this.angle)*this.radius, cy+Math.sin(this.angle)*this.radius, "#fff", 12); } }
+            repair() { if(this.energy>0 && this.energy<100) { this.energy = Math.min(100, this.energy+30); this.pulse = 20; triggerMemory(this.key); createParticles(cx+Math.cos(this.angle)*minDim*0.35, cy+Math.sin(this.angle)*minDim*0.35, "#fff", 12); } }
         }
 
         class Enemy {
@@ -372,33 +346,38 @@
                 let s = Math.floor(Math.random()*4);
                 if(s===0) { this.x = Math.random()*width; this.y = -50; } else if(s===1) { this.x = width+50; this.y = Math.random()*height; } else if(s===2) { this.x = Math.random()*width; this.y = height+50; } else { this.x = -50; this.y = Math.random()*height; }
                 this.label = SINS[Math.floor(Math.random()*SINS.length)];
-                let progress = game.spawnedCount / TOTAL_DRAGONS; this.speed = 1.2 + (progress * 2.5); this.alive = true; this.segments = Array(8).fill({x:this.x, y:this.y});
+                let progress = game.spawnedCount / TOTAL_DRAGONS; 
+                // Vitesse responsive (pixel par frame relatif à la taille)
+                let baseSpeed = minDim * 0.003; 
+                this.speed = baseSpeed + (progress * baseSpeed * 2); 
+                this.alive = true; this.segments = Array(8).fill({x:this.x, y:this.y});
             }
             update() {
                 let dx = cx-this.x, dy = cy-this.y; let dist = Math.sqrt(dx*dx + dy*dy); let angle = Math.atan2(dy, dx);
                 this.x += Math.cos(angle)*this.speed; this.y += Math.sin(angle)*this.speed;
                 this.segments.pop(); this.segments.unshift({x:this.x, y:this.y});
-                if (dist < 300) damageOverlay.style.opacity = (Math.sin(game.frame*0.25)+1)*0.4 * (1-(dist/300));
-                if(dist < 30) { this.alive = false; gameOver(); }
+                if (dist < minDim * 0.8) damageOverlay.style.opacity = (Math.sin(game.frame*0.25)+1)*0.4 * (1-(dist/(minDim*0.8)));
+                if(dist < minDim * 0.05) { this.alive = false; gameOver(); }
             }
             draw() {
-                ctx.save(); ctx.strokeStyle = "#a00"; ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.shadowBlur = 10; ctx.shadowColor = "#500";
+                ctx.save(); ctx.strokeStyle = "#a00"; ctx.lineWidth = minDim*0.01; ctx.lineCap = "round"; ctx.shadowBlur = 10; ctx.shadowColor = "#500";
                 ctx.beginPath(); ctx.moveTo(this.segments[0].x, this.segments[0].y);
-                for(let i=1; i<this.segments.length; i++) { let w = Math.sin(game.frame*0.4 + i)*6; ctx.lineTo(this.segments[i].x + w, this.segments[i].y + w); }
-                ctx.stroke(); ctx.fillStyle = "#f00"; ctx.beginPath(); ctx.arc(this.x,this.y,7,0,Math.PI*2); ctx.fill(); ctx.fillStyle = "#ffcccc"; ctx.font = "bold 14px Amiri"; ctx.fillText(this.label, this.x, this.y-20); ctx.restore();
+                for(let i=1; i<this.segments.length; i++) { let w = Math.sin(game.frame*0.4 + i)*(minDim*0.015); ctx.lineTo(this.segments[i].x + w, this.segments[i].y + w); }
+                ctx.stroke(); ctx.fillStyle = "#f00"; ctx.beginPath(); ctx.arc(this.x,this.y,minDim*0.015,0,Math.PI*2); ctx.fill(); 
+                ctx.fillStyle = "#ffcccc"; ctx.font = `bold ${minDim*0.035}px Amiri`; ctx.fillText(this.label, this.x, this.y-(minDim*0.04)); ctx.restore();
             }
         }
 
         class Shockwave {
             constructor() { this.r = 10; this.active = true; }
             update() {
-                this.r += 30; if(this.r > Math.max(width,height)*1.5) this.active = false;
+                this.r += minDim * 0.05; if(this.r > Math.max(width,height)*1.5) this.active = false;
                 game.enemies.forEach(e => { if(e.alive && Math.sqrt(Math.pow(e.x-cx,2)+Math.pow(e.y-cy,2)) < this.r) { e.alive = false; killEnemy(e); game.shake = 10; } });
             }
-            draw() { ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, this.r, 0, Math.PI*2); ctx.strokeStyle = "#fff"; ctx.lineWidth = 100; ctx.shadowBlur = 60; ctx.shadowColor = "#4fc3f7"; ctx.globalAlpha = 1 - (this.r/(Math.max(width,height)*1.5)); ctx.stroke(); ctx.restore(); }
+            draw() { ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, this.r, 0, Math.PI*2); ctx.strokeStyle = "#fff"; ctx.lineWidth = minDim*0.2; ctx.shadowBlur = 60; ctx.shadowColor = "#4fc3f7"; ctx.globalAlpha = 1 - (this.r/(Math.max(width,height)*1.5)); ctx.stroke(); ctx.restore(); }
         }
 
-        function createParticles(x, y, c, n) { for(let i=0; i<n; i++) game.particles.push({x:x, y:y, vx:(Math.random()-0.5)*15, vy:(Math.random()-0.5)*15, life:1, color:c}); }
+        function createParticles(x, y, c, n) { for(let i=0; i<n; i++) game.particles.push({x:x, y:y, vx:(Math.random()-0.5)*minDim*0.03, vy:(Math.random()-0.5)*minDim*0.03, life:1, color:c}); }
         function triggerMemory(k) { let l = MEMORIES[k]; memText.textContent = `"${l[Math.floor(Math.random()*l.length)]}"`; memText.style.opacity = 1; memText.style.transform = "translate(-50%, -120%) scale(1.1)"; setTimeout(() => { memText.style.opacity = 0; memText.style.transform = "translate(-50%, -50%)"; }, 1200); game.ulti = Math.min(100, game.ulti+5); updateUlti(); }
         function killEnemy(e) { createParticles(e.x, e.y, "#fff", 20); game.defeatedCount++; updateHUD(); if(game.defeatedCount >= TOTAL_DRAGONS) winGame(); }
         function updateHUD() { dragonCounter.textContent = `${game.spawnedCount} / ${TOTAL_DRAGONS}`; if(game.spawnedCount > 85) dragonCounter.classList.add('counter-danger'); else dragonCounter.classList.remove('counter-danger'); }
@@ -422,7 +401,9 @@
             game.enemies = game.enemies.filter(e => {
                 if(!e.alive) return false;
                 let d = Math.sqrt(Math.pow(e.x-cx,2)+Math.pow(e.y-cy,2));
-                if(d < 155 && d > 125) {
+                // Collision responsive
+                let shieldRadius = minDim * 0.35;
+                if(d < shieldRadius + (minDim*0.05) && d > shieldRadius - (minDim*0.05)) {
                     let s = null, dx = e.x-cx, dy = e.y-cy;
                     if(Math.abs(dx)>Math.abs(dy)) s = (dx>0)?game.shields.right:game.shields.left; else s = (dy>0)?game.shields.bottom:game.shields.top;
                     if(s && s.energy>0) { s.energy -= 34; createParticles(e.x,e.y,s.color,8); game.shake+=3; killEnemy(e); return false; }
@@ -436,25 +417,43 @@
         function draw() {
             let sx = (Math.random()-0.5)*game.shake, sy = (Math.random()-0.5)*game.shake;
             ctx.save(); ctx.translate(sx, sy); ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillRect(-20,-20,width+40,height+40);
-            ctx.translate(cx, cy); ctx.shadowBlur = 30 + Math.sin(game.frame*0.1)*5; ctx.shadowColor = "#fff"; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.ellipse(0,0,15,40,0,0,Math.PI*2); ctx.fill(); ctx.translate(-cx, -cy);
+            
+            // Joueur responsive
+            ctx.translate(cx, cy); ctx.shadowBlur = 30; ctx.shadowColor = "#fff"; ctx.fillStyle = "#fff"; 
+            ctx.beginPath(); ctx.ellipse(0,0,minDim*0.04, minDim*0.1, 0,0,Math.PI*2); ctx.fill(); 
+            ctx.translate(-cx, -cy);
+
             Object.values(game.shields).forEach(s => s.draw()); game.enemies.forEach(e => e.draw());
-            game.particles.forEach(p => { if(p instanceof Shockwave) p.draw(); else { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill(); } });
+            game.particles.forEach(p => { if(p instanceof Shockwave) p.draw(); else { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x,p.y,minDim*0.008,0,Math.PI*2); ctx.fill(); } });
             ctx.restore();
         }
         function loop() { if(game.active) { update(); draw(); animationId = requestAnimationFrame(loop); } }
+
+        /* INPUTS AMÉLIORÉS (TACTILE + SOURIS) */
         function handleInput(x, y) {
             if(!game.active) return;
-            if(Math.sqrt(Math.pow(x-cx,2)+Math.pow(y-cy,2)) < 80) { triggerUlti(); return; }
-            let dx = x-cx, dy = y-cy; if(Math.abs(dx)>Math.abs(dy)) { (dx>0)?game.shields.right.repair():game.shields.left.repair(); } else { (dy>0)?game.shields.bottom.repair():game.shields.top.repair(); }
+            let d = Math.sqrt(Math.pow(x-cx,2)+Math.pow(y-cy,2));
+            // Zone centrale responsive (20% du minDim) pour l'Ulti
+            if(d < minDim * 0.2) { triggerUlti(); return; }
+            
+            let dx = x-cx, dy = y-cy; 
+            if(Math.abs(dx)>Math.abs(dy)) { (dx>0)?game.shields.right.repair():game.shields.left.repair(); } else { (dy>0)?game.shields.bottom.repair():game.shields.top.repair(); }
         }
+        
+        // Touchstart avec preventDefault pour éviter zoom/scroll
+        window.addEventListener('touchstart', e => { 
+            if(game.active) e.preventDefault(); 
+            handleInput(e.touches[0].clientX, e.touches[0].clientY); 
+        }, {passive:false});
+
         window.addEventListener('mousedown', e => handleInput(e.clientX, e.clientY));
-        window.addEventListener('touchstart', e => { e.preventDefault(); handleInput(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
+        
         window.addEventListener('keydown', e => {
             if(!game.active) return;
             switch(e.code) { case 'Space': triggerUlti(); break; case 'ArrowUp': case 'KeyW': game.shields.top.repair(); break; case 'ArrowDown': case 'KeyS': game.shields.bottom.repair(); break; case 'ArrowLeft': case 'KeyA': game.shields.left.repair(); break; case 'ArrowRight': case 'KeyD': game.shields.right.repair(); break; }
         });
 
-        /* GAMEPAD POLL & STATE MACHINE */
+        /* GAMEPAD POLL */
         function pollGamepad() {
             const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
             let gp = null;
@@ -469,7 +468,7 @@
                     if ((gp.buttons[14].pressed) || (gp.axes[0] < -0.5)) game.shields.left.repair();
                     if ((gp.buttons[15].pressed) || (gp.axes[0] > 0.5)) game.shields.right.repair();
                 } else {
-                    if (now - lastInputTime > 500) { // Navigation menu
+                    if (now - lastInputTime > 500) { 
                         if (gp.buttons[0].pressed || gp.buttons[9].pressed) { // A or START
                             lastInputTime = now;
                             if (currentScreen === 0) playIntro();
@@ -516,7 +515,6 @@
             setTimeout(() => { document.getElementById('victory-screen').classList.remove('hidden'); document.getElementById('victory-screen').classList.add('visible'); }, 3000);
         }
         
-        // Start Loop
         requestAnimationFrame(pollGamepad);
         resize();
 
