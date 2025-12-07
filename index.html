@@ -13,8 +13,6 @@
             --blue-light: #4fc3f7;
             --danger: #a00000;
             --fire-defeat: #ff4500;
-            --paradise-green: #1b5e20; /* Vert émeraude pour la victoire */
-            --paradise-text: #004d40;
         }
 
         body {
@@ -45,7 +43,7 @@
 
         .logo-deen {
             font-family: 'Cinzel', serif; font-weight: 900; 
-            font-size: 6vw; /* TAILLE RÉDUITE ICI (était 10vw) */
+            font-size: 6vw;
             background: linear-gradient(to bottom, #cfc09f 22%, #634f2c 24%, #cfc09f 26%, #cfc09f 27%, #ffecb3 40%, #3a2c0f 78%); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
@@ -83,7 +81,7 @@
         /* --- OVERLAYS JEU --- */
         #damage-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, transparent 40%, rgba(180, 0, 0, 0.8) 100%); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 5; }
         
-        /* OVERLAY VICTOIRE - FLASH */
+        /* OVERLAY VICTOIRE - FLASH BLANC INITIAL */
         #victory-flash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 45; }
         .burst-light { animation: lightBurst 3s forwards ease-out; }
         @keyframes lightBurst { 0% { opacity: 0; } 10% { opacity: 1; } 100% { opacity: 0; } }
@@ -171,28 +169,36 @@
         .btn-a.active { background: var(--blue-light); box-shadow: 0 0 10px var(--blue-light); animation: keyPulse 1.5s infinite; }
         @keyframes keyPulse { 0% { opacity: 0.5; } 100% { opacity: 1; transform: scale(1.05); } }
 
-        /* --- STYLES VICTOIRE SCINTILLANTE --- */
+        /* --- NOUVEAUX STYLES VICTOIRE (GARANTIE LISIBILITÉ) --- */
         #victory-screen {
-            background: radial-gradient(circle, #ffffff 0%, #e0f7fa 60%, #b2ebf2 100%); /* Fond Clair */
-            animation: scintillateBg 4s infinite alternate;
+            /* Fond sombre céleste pour contraste maximum avec le texte clair */
+            background: radial-gradient(circle at center, #004d40 0%, #00251a 50%, #000000 100%);
+            animation: scintillateDivine 5s infinite alternate ease-in-out;
         }
-        @keyframes scintillateBg {
-            0% { filter: brightness(1); }
-            100% { filter: brightness(1.15) saturate(1.2); }
+        @keyframes scintillateDivine {
+            0% { filter: brightness(1); box-shadow: inset 0 0 50px rgba(79, 195, 247, 0.3); }
+            100% { filter: brightness(1.4); box-shadow: inset 0 0 150px rgba(255, 215, 0, 0.4); }
         }
         
         .victory-title {
-            color: var(--paradise-green) !important;
-            text-shadow: 0 0 5px #fff, 0 0 20px #81d4fa !important;
-            font-size: 4rem;
+            color: var(--gold) !important;
+            text-shadow: 0 0 20px var(--gold), 0 0 40px #fff !important;
+            font-size: 4rem; margin-bottom: 30px;
         }
         
         .victory-text {
-            color: var(--paradise-text) !important;
-            font-weight: bold;
-            font-size: 1.6rem !important;
-            text-shadow: 0 0 2px #fff;
+            color: #fff !important;
+            font-weight: bold; font-size: 1.8rem !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 15px rgba(79, 195, 247, 0.6);
         }
+        .source-ref-victory { color: var(--blue-light) !important; font-weight: normal; }
+
+        .btn-victory-style {
+            border-color: var(--gold) !important; color: var(--gold) !important;
+            background: rgba(0,0,0,0.3); box-shadow: 0 0 20px var(--blue-light);
+        }
+        .btn-victory-style:hover { background: var(--gold) !important; color: #000 !important; box-shadow: 0 0 50px var(--gold); }
+        .hint-victory { color: var(--blue-light) !important; }
 
     </style>
 </head>
@@ -295,16 +301,16 @@
             <div class="btn-gamepad-hint">Appuyez sur A ou START</div>
         </div>
 
-        <div id="victory-screen" class="screen hidden" style="background: transparent;">
+        <div id="victory-screen" class="screen hidden">
             <h1 class="victory-title">LA GRANDE RÉUSSITE</h1>
             <div class="sacred-text victory-text">
                 Les anges descendent sur eux :<br>
                 "N'ayez crainte et ne soyez pas affligés ; mais annoncez la bonne nouvelle du Paradis qui vous était promis."<br><br>
                 "Entrez-y en paix et en sécurité."
-                <span class="source-ref" style="color: #004d40;">Coran 41:30 / 15:46</span>
+                <span class="source-ref source-ref-victory">Coran 41:30 / 15:46</span>
             </div>
-            <button class="btn-start" style="border-color: #1b5e20; color: #1b5e20; font-weight:bold;" onclick="startGame()">RENAÎTRE</button>
-            <div class="btn-gamepad-hint" style="color:#1b5e20;">Appuyez sur A ou START</div>
+            <button class="btn-start btn-victory-style" onclick="startGame()">REJOUER</button>
+            <div class="btn-gamepad-hint hint-victory">Appuyez sur A ou START</div>
         </div>
     </div>
 
@@ -336,7 +342,8 @@
         const SHIELDS = { top: { color: '#4fc3f7', label: 'PRIÈRE' }, right: { color: '#66bb6a', label: 'JEÛNE' }, bottom: { color: '#ab47bc', label: 'BONTÉ' }, left: { color: '#ffa726', label: 'ZAKAT' } };
 
         let width, height, cx, cy, animationId;
-        const TOTAL_DRAGONS = 99;
+        // POUR TESTER LA VICTOIRE : Mets TOTAL_DRAGONS à 3. N'oublie pas de remettre 99 !
+        const TOTAL_DRAGONS = 99; 
         let game = { active: false, frame: 0, spawnedCount: 0, defeatedCount: 0, enemies: [], particles: [], shields: {}, ulti: 0, shake: 0 };
         let gamepadConnected = false;
         let currentScreen = 0; 
@@ -527,9 +534,9 @@
         }
         function winGame() {
             game.active = false; currentScreen = 6; cancelAnimationFrame(animationId); damageOverlay.style.opacity = 0;
-            vicFlash.classList.add('burst-light'); // Le flash blanc seul
+            vicFlash.classList.add('burst-light'); // Flash blanc
             audioVic.play().catch(e => console.log("Audio interact"));
-            // Affichage de l'écran de victoire APRES le début du flash
+            // Affichage de l'écran de victoire APRES le flash
             setTimeout(() => { document.getElementById('victory-screen').classList.remove('hidden'); document.getElementById('victory-screen').classList.add('visible'); }, 1500);
         }
         
